@@ -1,14 +1,12 @@
 const apprenants = require("./data");
+// import {apprenant} from "./data.js"
+
 function trouverParId(id) {
-  return apprenants.find((apprenant) => apprenant.id === id);
-}
-module.exports = {
-  trouverParId
-}
+  return apprenants.find((apprenant) => apprenant.id === id);}
 
 
 
-function normaliserNom(nomComplet){
+export function normaliserNom(nomComplet){
    if(!nomComplet || typeof nomComplet !== "string"){
     return "Ressayer !"
    }
@@ -20,7 +18,7 @@ function normaliserNom(nomComplet){
       
 // Nettoyer et uniformiser un nom.
 
-function validerResultat(resultat){
+export function validerResultat(resultat){
    let estValide = 
     typeof resultat.challengeTermine === "boolean" &&
     resultat.exercicesTermines <= resultat.totalExercices &&
@@ -61,13 +59,18 @@ function enregistrerResultat(apprenant, nouveauResultat) {
 }
 // Ajouter ou mettre à jour une journée.
 
-function rechercherApprenant(){
-
+function rechercherApprenant(recherche) {
+  return apprenants.filter(apprenant =>
+    apprenant.nomComplet
+      .toLowerCase()
+      .startsWith(recherche.toLowerCase())
+  );
 }
 // Retrouver un profil par identifiant ou par nom. 
-function calculerProgression(){
-
-}
+function calculerProgression(exercicesTermines, exercicesTotal){
+  let progression = (exercicesTermines / (exercicesTotal * 7)) * 100
+    return progression
+} 
 // Produire les indicateurs individuels.
 function filtrerParNiveau(){
 
@@ -92,9 +95,13 @@ function afficherTableauDeBord(){
 
 
 module.exports = {
-  trouverParId,
   normaliserNom,
   validerResultat,
   ajouterApprenant,
-  enregistrerResultat
-};
+  enregistrerResultat,
+  rechercherApprenant,
+  calculerProgression,
+  filtrerParNiveau,
+  trierParProgression,
+  afficherTableauDeBord
+}
