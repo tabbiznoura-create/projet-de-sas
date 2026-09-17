@@ -4,11 +4,11 @@ function trouverParId(id) {
 }
 module.exports = {
   trouverParId
-};
+}
 
 
 
-function normaliserNom(){
+function normaliserNom(nom){
 
 }
 // Nettoyer et uniformiser un nom.
@@ -16,8 +16,10 @@ function validerResultat(){
 
 }
 // Vérifier les valeurs d’un résultat journalier.
-function ajouterApprenant(){
-
+function ajouterApprenant(nomComplet, ville, resultats){
+const apprenant = { newId: id++, nomComplet, ville, resultats}
+apprenant.push(apprenant)
+return apprenant
 }
 // Ajouter un apprenant en contrôlant les doublons d’identifiant.
 function enregistrerResultat(){
