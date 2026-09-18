@@ -1,6 +1,6 @@
 
 
-
+const prompt = require("prompt-sync")()
 const apprenants = require("./data");
 // import {apprenant} from "./data.js"
 
@@ -11,16 +11,16 @@ const apprenants = require("./data");
 
 
 
-function normaliserNom(nomComplet){
-   if(!nomComplet || typeof nomComplet !== "string"){
+function normaliserNom(nomComplet) {
+  if (!nomComplet || typeof nomComplet !== "string") {
     return "Ressayer !"
-   }
-     nomComplet = nomComplet.trim()
-   
-   return nomComplet.charAt(0).toUpperCase() +
-         nomComplet.slice(1).toLowerCase()
   }
-      
+  nomComplet = nomComplet.trim()
+
+  return nomComplet.charAt(0).toUpperCase() +
+    nomComplet.slice(1).toLowerCase()
+}
+
 // Nettoyer et uniformiser un nom.
 
 
@@ -29,23 +29,23 @@ function normaliserNom(nomComplet){
 
 
 
-function ajouterApprenant(nomComplet, ville){
+function ajouterApprenant() {
 
   let nomComplet = prompt("Entrer votre nom: ")
   let ville = prompt("Entrer votre ville: ")
 
-const id = apprenants.length > 0 ? Math.max(
-  ...apprenants.map(apprenant => apprenant.id)
-) + 1 : 1
+  const id = apprenants.length > 0 ? Math.max(
+    ...apprenants.map(apprenant => apprenant.id)
+  ) + 1 : 1
 
-const apprenant = {
-  id, nomComplet : nomComplet,
-  ville : ville,
-   resultats: []
-}
-apprenants.push(apprenant)
+  const apprenant = {
+    id, nomComplet: nomComplet,
+    ville: ville,
+    resultats: []
+  }
+  apprenants.push(apprenant)
 
-return apprenant
+  return apprenant
 }
 // Ajouter un apprenant en contrôlant les doublons d’identifiant.
 
@@ -56,19 +56,19 @@ return apprenant
 
 
 
-function validerResultat(challenge, exercicesTermines, totalExercices){ 
+function validerResultat(challenge, exercicesTermines, totalExercices) {
 
-  if (typeof challenge === "boolean" && 
+  if (typeof challenge === "boolean" &&
     exercicesTermines <= totalExercices &&
     totalExercices === 20 &&
     exercicesTermines >= 0
-  ) { 
-    return "Resultat Valide" 
-  } else { 
+  ) {
+    return "Resultat Valide"
+  } else {
     return "Resultat non valide, Merci de ressayer !"
   }
-  
-  }
+
+}
 
 // Vérifier les valeurs d’un résultat journalier.
 
@@ -82,12 +82,12 @@ function validerResultat(challenge, exercicesTermines, totalExercices){
 
 
 function enregistrerResultat(apprenant, nouveauResultat) {
-  let  newResultat = validerResultat(
+  let newResultat = validerResultat(
     nouveauResultat.challengeTermine,
     nouveauResultat.exercicesTermines,
     nouveauResultat.totalExercices
   )
-  if (resultat === "Resultat non valide, Merci de ressayer !") {
+  if (newResultat === "Resultat non valide, Merci de ressayer !") {
     return newResultat
   }
 
@@ -107,11 +107,12 @@ function enregistrerResultat(apprenant, nouveauResultat) {
 
 
 
-function rechercherApprenant(recherche) {
+function rechercherApprenantParNom() {
+  let nom = prompt("Entrer Nom: ")
   return apprenants.filter(apprenant =>
     apprenant.nomComplet
       .toLowerCase()
-      .startsWith(recherche.toLowerCase())
+      .startsWith(nom.toLowerCase())
   )
 }
 // Retrouver un profil par identifiant ou par nom. 
@@ -119,41 +120,52 @@ function rechercherApprenant(recherche) {
 
 
 
+function rechercherApprenantParId() {
+  let id = Number(prompt("Entrer ID: "))
+  return apprenants.filter(apprenant =>
+    apprenant.id === id
+  )
+
+}
 
 
 
 
 
-function calculerProgression(apprenant){
 
-    let exercicesTermines = 0
+
+
+function calculerProgression(apprenant) {
+
+  let exercicesTermines = 0
 
   for (let i = 0; i < apprenant.resultats.length; i++) {
     exercicesTermines = exercicesTermines + apprenant.resultats[i].exercicesTermines
   }
   let nombreJours = apprenant.resultats.length
   let progression = (exercicesTermines / (20 * nombreJours)) * 100
-    return progression.toFixed(0) + "%"
-} 
-// Produire les indicateurs individuels.
-
-
-
-
-
-
-
-
-
-function filtrerParNiveau(progression){
-  progression = parseInt(progression)
-if (progression >= 0 && progression < 40 ) {
-  return "Faible" 
-} else if (progression >= 40 && progression < 70) {
-  return "Intermédiare"
-} else if (progression >= 70 && progression <= 100){
-return "Avancé"
+  return progression.toFixed(0) + "%"
 }
+// Produire les indicateurs individuels.
+ 
+
+
+
+
+
+
+
+
+function filtrerParNiveau(progression) {
+  //  progression = prompt("Entrer le niveau: ")
+  progression = parseInt(progression)
+  if (progression >= 0 && progression < 40) {
+    return "Faible"
+  } else if (progression >= 40 && progression < 70) {
+    return "Intermédiare"
+  } else if (progression >= 70 && progression <= 100) {
+    return "Avancé"
+  }
 } // Sélectionner les profils d’un niveau donné.
 
 
@@ -164,18 +176,18 @@ return "Avancé"
 
 
 
-function trierParProgression(){
+function trierParProgression() {
   let classement = []
-  for (let i = 0; i < apprenants.length; i++){
+  for (let i = 0; i < apprenants.length; i++) {
 
-   let progression = calculerProgression(apprenants[i])
+    let progression = calculerProgression(apprenants[i])
 
-classement.push(progression)
+    classement.push(progression)
   }
 
-classement.sort((a, b) => parseInt(b) - parseInt(a))
+  classement.sort((a, b) => parseInt(b) - parseInt(a))
 
-return classement 
+  return classement
 }
 // Classer les profils par progression décroissante.
 
@@ -185,21 +197,21 @@ return classement
 
 
 
-function afficherTableauDeBord(){
+function afficherTableauDeBord() {
 
   let tableau = []
   for (let i = 0; i < apprenants.length; i++) {
 
     let progression = calculerProgression(apprenants[i])
     let niveau = filtrerParNiveau(progression)
-tableau.push({
-  id: apprenants[i].id,
-  nomComplet: apprenants[i].nomComplet,
-  progression: progression,
-  niveau: niveau
-})
-}
-console.table(tableau)
+    tableau.push({
+      id: apprenants[i].id,
+      nomComplet: apprenants[i].nomComplet,
+      progression: progression,
+      niveau: niveau
+    })
+  }
+  console.table(tableau)
 }
 // Présenter les indicateurs du groupe et les listes
 
@@ -209,9 +221,81 @@ console.table(tableau)
 
 
 
-function TrierLesApprenantsParOrdreAlphabétique(){
 
+
+function afficherListeApprenants() {
+  let liste = []
+
+  for (let i = 0; i < apprenants.length; i++) {
+    liste.push({
+      id: apprenants[i].id,
+      nomComplet: apprenants[i].nomComplet,
+      ville: apprenants[i].ville
+    })
+  }
+
+  console.table(liste)
 }
+
+
+
+
+
+
+
+
+
+function TrierLesApprenantsParOrdreAlphabétique() {
+
+  const consultation = [...apprenants]
+
+  consultation.sort((a, b) => {
+    if (a.nomComplet < b.nomcomplet) {
+      return -1
+    }
+    if (a.nomComplet > b.nomComplet) {
+      return 1
+    }
+    return 0
+  })
+  console.log(consultation)
+}
+
+
+
+
+
+
+
+
+function ajouterOuModifierResultat() {
+
+  let id = Number(prompt("Entrer ID : "))
+  let jour = Number(prompt("Entrer le jour : "))
+  let challengeTermine = prompt("Challenge terminé ? (true/false) ") === "true"
+  let exercicesTermines = Number(prompt("Nombre d'exercices terminés : "))
+  let totalExercices = Number(prompt("Total des exercices : "))
+
+  let apprenant = apprenants.find(apprenant => apprenant.id === id)
+
+  if (!apprenant) {
+    return "Apprenant introuvable"
+  }
+
+  let nouveauResultat = {
+    jour: jour,
+    challengeTermine: challengeTermine,
+    exercicesTermines: exercicesTermines,
+    totalExercices: totalExercices
+  }
+
+  return enregistrerResultat(apprenant, nouveauResultat)
+}
+
+
+
+
+
 
 
 module.exports = {
@@ -219,10 +303,13 @@ module.exports = {
   validerResultat,
   ajouterApprenant,
   enregistrerResultat,
-  rechercherApprenant,
+  rechercherApprenantParNom,
+  rechercherApprenantParId,
   calculerProgression,
   filtrerParNiveau,
   trierParProgression,
   afficherTableauDeBord,
-  TrierLesApprenantsParOrdreAlphabétique
+  afficherListeApprenants,
+  TrierLesApprenantsParOrdreAlphabétique,
+  ajouterOuModifierResultat
 }

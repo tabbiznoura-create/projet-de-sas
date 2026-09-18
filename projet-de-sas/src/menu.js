@@ -1,7 +1,26 @@
 // import PromptSync from "prompt-sync"
 const prompt = require("prompt-sync")()
+const  apprenants = require("./data")
 
-const { afficherTableauDeBord } = require("./function")
+const { afficherTableauDeBord,
+  afficherListeApprenants,
+  rechercherApprenantParNom,
+  rechercherApprenantParId, 
+ normaliserNom,
+  validerResultat,
+  ajouterApprenant,
+  enregistrerResultat,
+  calculerProgression,
+  filtrerParNiveau,
+  trierParProgression,
+  TrierLesApprenantsParOrdreAlphabétique,
+ajouterOuModifierResultat} = require("./function")
+
+
+
+
+
+
 
 
 let continuer = true
@@ -24,10 +43,85 @@ let choix = prompt("Choisissez une option : ")
 
   console.log("Tu as choisi :", choix)
 
-  if (choix === "1") { afficherTableauDeBord()}
 
-  if (choix === "0") {
-    continuer = false
+switch(choix){
 
-}
-}
+  case"1":
+
+  afficherTableauDeBord()
+  break;
+
+  case"2":
+
+  afficherListeApprenants()
+  break;
+
+  case "3":
+  console.log(ajouterApprenant())
+  break
+
+
+
+  case"4":
+
+  console.log(rechercherApprenantParId())
+  break;
+
+  case "5":
+  console.log(ajouterOuModifierResultat())
+  break
+
+  case"6":
+
+  console.log(rechercherApprenantParNom())
+  break;
+
+//   case"7":
+
+//   let tableaudebord = afficherTableauDeBord()
+//   console.log(tableaudebord)
+//   break;
+
+//   case"8":
+
+//   let tableaudebord = afficherTableauDeBord()
+//   console.log(tableaudebord)
+//   break;
+
+//   case"9":
+
+//   let tableaudebord = afficherTableauDeBord()
+//   console.log(tableaudebord)
+//   break;
+
+//   case"10":
+
+//   let tableaudebord = afficherTableauDeBord()
+//   console.log(tableaudebord)
+//   break;
+
+//   case"11":
+
+//   let tableaudebord = afficherTableauDeBord()
+//   console.log(tableaudebord)
+//   break;
+
+  case"0":
+
+  continuer = false
+  break;
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+}}
