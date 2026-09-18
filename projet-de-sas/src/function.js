@@ -1,12 +1,17 @@
+
+
+
 const apprenants = require("./data");
 // import {apprenant} from "./data.js"
 
-function trouverParId(id) {
-  return apprenants.find((apprenant) => apprenant.id === id);}
 
 
 
-export function normaliserNom(nomComplet){
+
+
+
+
+function normaliserNom(nomComplet){
    if(!nomComplet || typeof nomComplet !== "string"){
     return "Ressayer !"
    }
@@ -18,28 +23,25 @@ export function normaliserNom(nomComplet){
       
 // Nettoyer et uniformiser un nom.
 
-export function validerResultat(resultat){
-   let estValide = 
-    typeof resultat.challengeTermine === "boolean" &&
-    resultat.exercicesTermines <= resultat.totalExercices &&
-    resultat.exercicesTermines >= 0 &&
-    resultat.totalExercices === 20;
 
-  return {
-    valide: estValide,
-    message: estValide ? "Résultat valide" : "Non valide, merci de réessayer"
-  };
-}
-// Vérifier les valeurs d’un résultat journalier.
+
+
+
 
 
 function ajouterApprenant(nomComplet, ville){
+
+  let nomComplet = prompt("Entrer votre nom: ")
+  let ville = prompt("Entrer votre ville: ")
+
 const id = apprenants.length > 0 ? Math.max(
-  ...apprenants.map(apprenant.id)
+  ...apprenants.map(apprenant => apprenant.id)
 ) + 1 : 1
 
 const apprenant = {
-  id, nomComplet, ville, resultats
+  id, nomComplet : nomComplet,
+  ville : ville,
+   resultats: []
 }
 apprenants.push(apprenant)
 
@@ -47,8 +49,50 @@ return apprenant
 }
 // Ajouter un apprenant en contrôlant les doublons d’identifiant.
 
+
+
+
+
+
+
+
+function validerResultat(challenge, exercicesTermines, totalExercices){ 
+
+  if (typeof challenge === "boolean" && 
+    exercicesTermines <= totalExercices &&
+    totalExercices === 20 &&
+    exercicesTermines >= 0
+  ) { 
+    return "Resultat Valide" 
+  } else { 
+    return "Resultat non valide, Merci de ressayer !"
+  }
+  
+  }
+
+// Vérifier les valeurs d’un résultat journalier.
+
+
+
+
+
+
+
+
+
+
 function enregistrerResultat(apprenant, nouveauResultat) {
+  let  newResultat = validerResultat(
+    nouveauResultat.challengeTermine,
+    nouveauResultat.exercicesTermines,
+    nouveauResultat.totalExercices
+  )
+  if (resultat === "Resultat non valide, Merci de ressayer !") {
+    return newResultat
+  }
+
   let index = apprenant.resultats.findIndex(x => x.jour === nouveauResultat.jour);
+
 
   if (index !== -1) {
     apprenant.resultats[index] = nouveauResultat;
@@ -57,31 +101,105 @@ function enregistrerResultat(apprenant, nouveauResultat) {
   }
   return apprenant;
 }
-// Ajouter ou mettre à jour une journée.
+//  Ajouter ou mettre à jour une journée.
+
+
+
+
 
 function rechercherApprenant(recherche) {
   return apprenants.filter(apprenant =>
     apprenant.nomComplet
       .toLowerCase()
       .startsWith(recherche.toLowerCase())
-  );
+  )
 }
 // Retrouver un profil par identifiant ou par nom. 
-function calculerProgression(exercicesTermines, exercicesTotal){
-  let progression = (exercicesTermines / (exercicesTotal * 7)) * 100
-    return progression
+
+
+
+
+
+
+
+
+
+function calculerProgression(apprenant){
+
+    let exercicesTermines = 0
+
+  for (let i = 0; i < apprenant.resultats.length; i++) {
+    exercicesTermines = exercicesTermines + apprenant.resultats[i].exercicesTermines
+  }
+  let nombreJours = apprenant.resultats.length
+  let progression = (exercicesTermines / (20 * nombreJours)) * 100
+    return progression.toFixed(0) + "%"
 } 
 // Produire les indicateurs individuels.
-function filtrerParNiveau(){
 
+
+
+
+
+
+
+
+
+function filtrerParNiveau(progression){
+  progression = parseInt(progression)
+if (progression >= 0 && progression < 40 ) {
+  return "Faible" 
+} else if (progression >= 40 && progression < 70) {
+  return "Intermédiare"
+} else if (progression >= 70 && progression <= 100){
+return "Avancé"
 }
-// Sélectionner les profils d’un niveau donné.
-function trierParProgression(){
+} // Sélectionner les profils d’un niveau donné.
 
+
+
+
+
+
+
+
+
+function trierParProgression(){
+  let classement = []
+  for (let i = 0; i < apprenants.length; i++){
+
+   let progression = calculerProgression(apprenants[i])
+
+classement.push(progression)
+  }
+
+classement.sort((a, b) => parseInt(b) - parseInt(a))
+
+return classement 
 }
 // Classer les profils par progression décroissante.
+
+
+
+
+
+
+
 function afficherTableauDeBord(){
 
+  let tableau = []
+  for (let i = 0; i < apprenants.length; i++) {
+
+    let progression = calculerProgression(apprenants[i])
+    let niveau = filtrerParNiveau(progression)
+tableau.push({
+  id: apprenants[i].id,
+  nomComplet: apprenants[i].nomComplet,
+  progression: progression,
+  niveau: niveau
+})
+}
+console.table(tableau)
 }
 // Présenter les indicateurs du groupe et les listes
 
@@ -91,7 +209,9 @@ function afficherTableauDeBord(){
 
 
 
+function TrierLesApprenantsParOrdreAlphabétique(){
 
+}
 
 
 module.exports = {
@@ -103,5 +223,6 @@ module.exports = {
   calculerProgression,
   filtrerParNiveau,
   trierParProgression,
-  afficherTableauDeBord
+  afficherTableauDeBord,
+  TrierLesApprenantsParOrdreAlphabétique
 }
