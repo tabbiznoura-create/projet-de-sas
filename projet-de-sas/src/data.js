@@ -130,7 +130,7 @@ const apprenants = [
     {
       jour: 2,
       totalExercices: 20,
-      exercicesTermines: 12,
+      exercicesTermines: 2,
       challengeTermine: false
     }
   ]
@@ -143,13 +143,13 @@ const apprenants = [
     {
       jour: 1,
       totalExercices: 20,
-      exercicesTermines: 14,
+      exercicesTermines: 4,
       challengeTermine: true
     },
     {
       jour: 2,
       totalExercices: 20,
-      exercicesTermines: 16,
+      exercicesTermines: 1,
       challengeTermine: true
     }
   ]

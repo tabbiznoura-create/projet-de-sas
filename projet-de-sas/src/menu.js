@@ -76,52 +76,22 @@ switch(choix){
   console.log(rechercherApprenantParNom())
   break;
 
-//   case"7":
+case "7":
+  filtrerParNiveau()
+  break
 
-//   let tableaudebord = afficherTableauDeBord()
-//   console.log(tableaudebord)
-//   break;
+case "8":
+  console.table(trierParProgression())
+  break
 
-//   case"8":
+case "9":
 
-//   let tableaudebord = afficherTableauDeBord()
-//   console.log(tableaudebord)
-//   break;
-
-//   case"9":
-
-//   let tableaudebord = afficherTableauDeBord()
-//   console.log(tableaudebord)
-//   break;
-
-//   case"10":
-
-//   let tableaudebord = afficherTableauDeBord()
-//   console.log(tableaudebord)
-//   break;
-
-//   case"11":
-
-//   let tableaudebord = afficherTableauDeBord()
-//   console.log(tableaudebord)
-//   break;
+  TrierLesApprenantsParOrdreAlphabétique()
+  break
 
   case"0":
 
   continuer = false
   break;
   
-
-
-
-
-
-
-
-
-
-
-
-
-
 }}

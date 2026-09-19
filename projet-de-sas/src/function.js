@@ -3,8 +3,7 @@
 const prompt = require("prompt-sync")()
 const apprenants = require("./data");
 // import {apprenant} from "./data.js"
-
-
+// 
 
 
 
@@ -12,9 +11,9 @@ const apprenants = require("./data");
 
 
 function normaliserNom(nomComplet) {
-  if (!nomComplet || typeof nomComplet !== "string") {
-    return "Ressayer !"
-  }
+ if (!isNaN(nomComplet)) {
+  return "Ressayer !"
+}
   nomComplet = nomComplet.trim()
 
   return nomComplet.charAt(0).toUpperCase() +
@@ -32,7 +31,15 @@ function normaliserNom(nomComplet) {
 function ajouterApprenant() {
 
   let nomComplet = prompt("Entrer votre nom: ")
+
+   if (!isNaN(nomComplet)) {
+  return "lettres uniquement"
+}
   let ville = prompt("Entrer votre ville: ")
+
+  if (!isNaN(ville)) {
+  return "lettres uniquement"
+}
 
   const id = apprenants.length > 0 ? Math.max(
     ...apprenants.map(apprenant => apprenant.id)
@@ -108,7 +115,7 @@ function enregistrerResultat(apprenant, nouveauResultat) {
 
 
 function rechercherApprenantParNom() {
-  let nom = prompt("Entrer Nom: ")
+  let nom = prompt("Entrer le nom à rechercher: ")
   return apprenants.filter(apprenant =>
     apprenant.nomComplet
       .toLowerCase()
@@ -121,12 +128,20 @@ function rechercherApprenantParNom() {
 
 
 function rechercherApprenantParId() {
-  let id = Number(prompt("Entrer ID: "))
-  return apprenants.filter(apprenant =>
+  let id = Number(prompt("ID apprenant à consulter : "))
+
+
+  let resultat = apprenants.filter(apprenant =>
     apprenant.id === id
   )
 
-}
+  if (resultat.length === 0){
+    return "Cet ID n'existe pas"
+    
+  } 
+  return resultat
+  }
+
 
 
 
@@ -156,16 +171,30 @@ function calculerProgression(apprenant) {
 
 
 
-function filtrerParNiveau(progression) {
-  //  progression = prompt("Entrer le niveau: ")
-  progression = parseInt(progression)
+function filtrerParNiveau() {
+
+  let niveauFiltrer = prompt("Entrer le niveau: ")
+  
+  for (let i = 0; i < apprenants.length; i++) {
+
+    let progression = calculerProgression(apprenants[i])
+    progression = parseInt(progression)
+
+  
+  let niveau = ""
+
   if (progression >= 0 && progression < 40) {
-    return "Faible"
+    niveau = "Faible"
   } else if (progression >= 40 && progression < 70) {
-    return "Intermédiare"
+    niveau = "Moyen"
   } else if (progression >= 70 && progression <= 100) {
-    return "Avancé"
+    niveau = "Avance"
   }
+  if (niveau === niveauFiltrer){
+    console.table(apprenants[i].nomComplet)
+    console.table(apprenants[i].resultats)
+  }
+}
 } // Sélectionner les profils d’un niveau donné.
 
 
@@ -182,12 +211,17 @@ function trierParProgression() {
 
     let progression = calculerProgression(apprenants[i])
 
-    classement.push(progression)
+    let apprenant = {
+    nomComplet: apprenants[i].nomComplet,
+    progression: progression
+    }
+    classement.push(apprenant)
   }
 
-  classement.sort((a, b) => parseInt(b) - parseInt(a))
-
-  return classement
+  classement.sort((a, b) => {
+    return parseInt(b.progression) - parseInt(a.progression)
+  })
+  console.table(classement)
 }
 // Classer les profils par progression décroissante.
 
@@ -203,12 +237,13 @@ function afficherTableauDeBord() {
   for (let i = 0; i < apprenants.length; i++) {
 
     let progression = calculerProgression(apprenants[i])
-    let niveau = filtrerParNiveau(progression)
+
+
     tableau.push({
       id: apprenants[i].id,
       nomComplet: apprenants[i].nomComplet,
       progression: progression,
-      niveau: niveau
+     
     })
   }
   console.table(tableau)
@@ -250,7 +285,7 @@ function TrierLesApprenantsParOrdreAlphabétique() {
   const consultation = [...apprenants]
 
   consultation.sort((a, b) => {
-    if (a.nomComplet < b.nomcomplet) {
+    if (a.nomComplet < b.nomComplet) {
       return -1
     }
     if (a.nomComplet > b.nomComplet) {
@@ -258,7 +293,14 @@ function TrierLesApprenantsParOrdreAlphabétique() {
     }
     return 0
   })
-  console.log(consultation)
+  let liste = []
+  for (let i = 0; i < consultation.length; i++){
+
+    liste.push({
+      nomCompilet: consultation[i].nomComplet
+    })
+  }
+  console.table(liste)
 }
 
 
@@ -270,11 +312,11 @@ function TrierLesApprenantsParOrdreAlphabétique() {
 
 function ajouterOuModifierResultat() {
 
-  let id = Number(prompt("Entrer ID : "))
+  let id = Number(prompt("ID du résultat à modifier : "))
   let jour = Number(prompt("Entrer le jour : "))
   let challengeTermine = prompt("Challenge terminé ? (true/false) ") === "true"
   let exercicesTermines = Number(prompt("Nombre d'exercices terminés : "))
-  let totalExercices = Number(prompt("Total des exercices : "))
+  let totalExercices = 20
 
   let apprenant = apprenants.find(apprenant => apprenant.id === id)
 
