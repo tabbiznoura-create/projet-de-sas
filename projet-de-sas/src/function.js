@@ -33,8 +33,11 @@ function ajouterApprenant() {
   let nomComplet = prompt("Entrer votre nom: ")
 
    if (!isNaN(nomComplet)) {
+
   return "lettres uniquement"
 }
+  nomComplet = normaliserNom(nomComplet)
+
   let ville = prompt("Entrer votre ville: ")
 
   if (!isNaN(ville)) {
@@ -98,15 +101,15 @@ function enregistrerResultat(apprenant, nouveauResultat) {
     return newResultat
   }
 
-  let index = apprenant.resultats.findIndex(x => x.jour === nouveauResultat.jour);
+  let index = apprenant.resultats.findIndex(x => x.jour === nouveauResultat.jour)
 
 
   if (index !== -1) {
-    apprenant.resultats[index] = nouveauResultat;
+    apprenant.resultats[index] = nouveauResultat
   } else {
-    apprenant.resultats.push(nouveauResultat);
+    apprenant.resultats.push(nouveauResultat)
   }
-  return apprenant;
+  return apprenant
 }
 //  Ajouter ou mettre à jour une journée.
 
